@@ -1,0 +1,24 @@
+[
+    {
+        "nickname" :"Сергей Никонов skr1pmen",
+        "gender": "man",
+        "date_birth": "13.07.2001",
+        "age": "21",
+        "nationality": "rus",
+        "profession": ["яжемать","тыжфотшоп","якаменьшик"],
+        "hobby": ["тыжпрограммист"],
+        "is_admin": true,
+        "email": "kiberkot.v.roymenge@gmail.com",
+        "password": "skr1pmen",
+        "playlists": [
+            {
+                "name": "Моя музыка",
+                "tags": "",
+                "music_id": "[]",
+                "mark": true,
+                "music_num": "",
+                "music_len": ""
+            }
+        ]
+    }
+]

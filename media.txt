@@ -1,0 +1,10 @@
+{
+    id: "",
+    name: "",
+    tags: "",
+    info: {
+        author: "",
+        url: "",
+        music_len: "",
+    }
+}
