@@ -1,14 +1,13 @@
 import datetime
 import os
 import re
-
 import edit_user as edit_u
 
 
 def add_music(active_user):
     user_data = edit_u.get_file(active_user)
-    is_admin = bool(user_data[8])
-    if not is_admin:
+    is_admin = int(user_data[8])
+    if is_admin != 1:
         print("Нет прав!")
         return
     musics = os.listdir('./musics/')
@@ -87,7 +86,7 @@ def user_registration():
     age = str((datetime.datetime.now() - datetime.datetime(int(date[2]), int(date[1]), int(date[0]))) / 365.2425)
     age = age[:2]
 
-    users = [nickname, gender, date_birth, age, "", [], [], False, email, password, ["Моя музыка", [], [], True, "", ""]]
+    users = [nickname, gender, date_birth, age, "", [], [], 0, email, password, ["Моя музыка", [], [], True, "", ""]]
     num = 0
     while num < 11:
         with open(f"./users/{nick_user}.txt", "a", encoding='utf8') as user:
