@@ -122,31 +122,54 @@ def show_music():
                         print(f'\t{id} | {name} : {info}')
 
 
-def add_music_in_playlist(active_user):
-    id = input("Введите id песни: ")
-    music_list = os.listdir("./musics/")
-    for music in music_list:
-        with open(f"./musics/{music}", "r", encoding="utf8") as file:
-            info = file.readlines()
-            print(info)
-        if id == info[1][:-1]:
-            user = edit_u.get_file(active_user)
-            playlist = re.sub(r'[\n\[\]\']', '', user[11]).split(',')
-            print(playlist)
+# def add_music_in_playlist(active_user):
+#     id = input("Введите id песни: ")
+#     music_list = os.listdir("./musics/")
+#     for music in music_list:
+#         with open(f"./musics/{music}", "r", encoding="utf8") as file:
+#             info = file.readlines()
+#             print(info)
+#         if id == info[1][:-1]:
+#             user = edit_u.get_file(active_user)
+#             playlist = re.sub(r'[\n\[\]\']', '', user[11]).split(',')
+#             print(playlist)
+#
+#     # else:
+#     #     print("Такой песни нет!")
 
-    # else:
-    #     print("Такой песни нет!")
+
+def login():
+    all_users = os.listdir("./users/")
+    for user_file in all_users:
+        with open(f"./users/{user_file}", "r", encoding="utf8") as file:
+            user_data = file.readlines()
+            user_email = user_data[9][:-1]
+            user_password = user_data[10][:-1]
+            while True:
+                email = input("Введите emai: ").lower()
+                if email == user_email:
+                    password = input("Введите пароль: ").lower()
+                    if password == user_password:
+                        print("Успешная авторизация!")
+                        break
+                    else:
+                        print("Неверный пароль, попробуй ещё раз!")
+                else:
+                    print("Неверная почта, попробуй ещё раз!")
+
 
 
 def main():
     active_user = "skr1pmen"
 
     #  ↓ Активный пользователь программы, выбирается в Регистрации/Авторизации
+    login()  # Функция авторизации пользователей
     # active_user = user_registration()  # Функция регистрации пользователя
     # edit_user_info(active_user)  # Функция редактирования данных пользователя
     # add_music(active_user)  # Функция добавление музыки
     # show_music()  # Функция просмотра всех песен в базе
-    add_music_in_playlist(active_user)  # Функция добавления песен в плейлист
+    # add_music_in_playlist(active_user)  # Функция добавления песен в плейлист
+
 
 if __name__ == '__main__':
     main()
