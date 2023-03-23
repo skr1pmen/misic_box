@@ -123,20 +123,24 @@ def show_music():
                         print(f'\t{id} | {name} : {info}')
 
 
-# def add_music_in_playlist(active_user):
-#     id = input("Введите id песни: ")
-#     music_list = os.listdir("./musics/")
-#     for music in music_list:
-#         with open(f"./musics/{music}", "r", encoding="utf8") as file:
-#             info = file.readlines()
-#         if id == info[1][:-1]:
-#
-#     else:
-#         print("Такой песни нет!")
+def add_music_in_playlist(active_user):
+    id = input("Введите id песни: ")
+    music_list = os.listdir("./musics/")
+    for music in music_list:
+        with open(f"./musics/{music}", "r", encoding="utf8") as file:
+            info = file.readlines()
+            print(info)
+        if id == info[1][:-1]:
+            user = edit_u.get_file(active_user)
+            playlist = re.sub(r'[\n\[\]\']', '', user[11]).split(',')
+            print(playlist)
+
+    # else:
+    #     print("Такой песни нет!")
 
 
 def main():
-    # active_user = "skr1pmen"
+    active_user = "skr1pmen"
 
     #  ↓ Активный пользователь программы, выбирается в Регистрации/Авторизации
     # active_user = user_registration()  # Функция регистрации пользователя
