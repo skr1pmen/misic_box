@@ -122,20 +122,61 @@ def show_music():
                         print(f'\t{id} | {name} : {info}')
 
 
-# def add_music_in_playlist(active_user):
-#     id = input("Введите id песни: ")
-#     music_list = os.listdir("./musics/")
-#     for music in music_list:
-#         with open(f"./musics/{music}", "r", encoding="utf8") as file:
-#             info = file.readlines()
-#             print(info)
-#         if id == info[1][:-1]:
-#             user = edit_u.get_file(active_user)
-#             playlist = re.sub(r'[\n\[\]\']', '', user[11]).split(',')
-#             print(playlist)
-#
-#     # else:
-#     #     print("Такой песни нет!")
+def time_converter(time):
+    time = time.split(":")
+    if len(time) == 1:
+        return int(time[-1])
+    elif len(time) == 2:
+        sec = int(time[-1])
+        min = int(time[-2])
+        return min * 60 + sec
+    else:
+        sec = int(time[-1])
+        min = int(time[-2])
+        hour = int(time[-3])
+        return hour * 3600 + min * 60 + sec
+
+
+def add_music_in_playlist(active_user):
+    id = input("Введите id песни: ")
+    music_list = os.listdir("./musics/")
+    for music in music_list:
+        with open(f"./musics/{music}", "r", encoding="utf8") as file:
+            info = file.readlines()
+            if id == info[1][:-1]:
+                user = edit_u.get_file(active_user)
+                playlist = re.sub(r'[\n\[\]\']', '', user[11]).split(',')
+                old_tags = re.sub(r'[\n\[\]\']', '', playlist[1][:-1]).split(',')
+                old_id = re.sub(r'[\n\[\]\']', '', playlist[2][:-1]).split(',')
+                old_min = playlist[-2][:-1]
+                old_len = playlist[-1][:-1]
+                if old_min == ' ':
+                    old_min = 0
+                if old_len == ' ':
+                    old_len = 0
+
+                music_min = re.sub(r'[\n\[\]\']', '', info[-1]).split(',')
+                time = time_converter(music_min[-2][1:])
+
+                music_tags = re.sub(r'[\n\[\]\']', '', info[3][:-1]).split(',')
+
+
+                tags = []
+                music_id = []
+                tags = old_tags.extend(music_tags)
+                music_id = old_tags.append(info[1][:-1])
+                minuts = old_min + time
+                len = old_len + 1
+                print(tags)
+                print(music_id)
+                print(minuts)
+                print(len)
+
+                break
+            else:
+                continue
+            # print(playlist)
+
 
 
 def login():
@@ -163,12 +204,12 @@ def main():
     active_user = "skr1pmen"
 
     #  ↓ Активный пользователь программы, выбирается в Регистрации/Авторизации
-    login()  # Функция авторизации пользователей
+    # login()  # Функция авторизации пользователей
     # active_user = user_registration()  # Функция регистрации пользователя
     # edit_user_info(active_user)  # Функция редактирования данных пользователя
     # add_music(active_user)  # Функция добавление музыки
     # show_music()  # Функция просмотра всех песен в базе
-    # add_music_in_playlist(active_user)  # Функция добавления песен в плейлист
+    add_music_in_playlist(active_user)  # Функция добавления песен в плейлист
 
 
 if __name__ == '__main__':
