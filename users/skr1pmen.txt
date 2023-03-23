@@ -1,0 +1,12 @@
+
+['Никонов', 'Сергей', 'skr1pmen']
+мужской
+13.07.2001
+21
+
+[]
+[]
+True
+kiberkot.v.roymenge@gmail.com
+skr1pmen
+['Моя музыка', [], [], True, '', '']
