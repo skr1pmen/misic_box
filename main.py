@@ -1,4 +1,5 @@
 import datetime
+import time
 import os
 import re
 import edit_user as edit_u
@@ -86,9 +87,9 @@ def user_registration():
     age = str((datetime.datetime.now() - datetime.datetime(int(date[2]), int(date[1]), int(date[0]))) / 365.2425)
     age = age[:2]
 
-    users = [nickname, gender, date_birth, age, "", [], [], 0, email, password, ["Моя музыка", [], [], True, "", ""]]
+    users = [nickname, gender, date_birth, age, "", [], [], 0, email, password, "", "Моя музыка", [], [], True, 0, "00:00:00"]
     num = 0
-    while num < 11:
+    while num < len(users):
         with open(f"./users/{nick_user}.txt", "a", encoding='utf8') as user:
             user.write(f"\n{users[num]}")
         num += 1
@@ -142,41 +143,36 @@ def add_music_in_playlist(active_user):
     music_list = os.listdir("./musics/")
     for music in music_list:
         with open(f"./musics/{music}", "r", encoding="utf8") as file:
-            info = file.readlines()
-            if id == info[1][:-1]:
+            music_information = file.readlines()
+            if id == music_information[1][:-1]:
                 user = edit_u.get_file(active_user)
-                playlist = re.sub(r'[\n\[\]\']', '', user[11]).split(',')
-                old_tags = re.sub(r'[\n\[\]\']', '', playlist[1][:-1]).split(',')
-                old_id = re.sub(r'[\n\[\]\']', '', playlist[2][:-1]).split(',')
-                old_min = playlist[-2][:-1]
-                old_len = playlist[-1][:-1]
-                if old_min == ' ':
-                    old_min = 0
-                if old_len == ' ':
-                    old_len = 0
+                playlist_tags = re.sub(r'[\n\[\]\']', '', user[13][:-1]).split(', ')
+                playlist_id_music = re.sub(r'[\n\[\]\']', '', user[14][:-1]).split(', ')
+                playlist_num = int(user[16][:-1])
+                playlist_len = time_converter(user[17])
 
-                music_min = re.sub(r'[\n\[\]\']', '', info[-1]).split(',')
-                time = time_converter(music_min[-2][1:])
+                music_id = list(music_information[1][:-1])
+                music_tags = re.sub(r'[\n\[\]\']', '', music_information[3][:-1]).split(', ')
+                music_info = re.sub(r'[\n\[\]\']', '', music_information[4]).split(', ')
+                music_authors = list()
+                i = 0
+                while i < len(music_info) - 2:
+                    music_authors.append(music_info[i])
+                    i += 1
+                music_len = time_converter(music_info[-2])
 
-                music_tags = re.sub(r'[\n\[\]\']', '', info[3][:-1]).split(',')
+                playlist_tags = list(filter(None, set(playlist_tags + music_tags)))
+                playlist_id_music = list(filter(None, set(playlist_id_music + music_id)))
+                playlist_num += 1
+                playlist_len += music_len
+                format_time = time.strftime("%H:%M:%S", time.gmtime(playlist_len))
 
+                user[13] = f"{playlist_tags}\n"
+                user[14] = f"{playlist_id_music}\n"
+                user[16] = f"{playlist_num}\n"
+                user[17] = f"{format_time}"
 
-                tags = []
-                music_id = []
-                tags = old_tags.extend(music_tags)
-                music_id = old_tags.append(info[1][:-1])
-                minuts = old_min + time
-                len = old_len + 1
-                print(tags)
-                print(music_id)
-                print(minuts)
-                print(len)
-
-                break
-            else:
-                continue
-            # print(playlist)
-
+                edit_u.set_file(active_user, user)
 
 
 def login():
@@ -184,6 +180,7 @@ def login():
     for user_file in all_users:
         with open(f"./users/{user_file}", "r", encoding="utf8") as file:
             user_data = file.readlines()
+            nick_user = user_file[:-4]
             user_email = user_data[9][:-1]
             user_password = user_data[10][:-1]
             while True:
@@ -192,24 +189,23 @@ def login():
                     password = input("Введите пароль: ").lower()
                     if password == user_password:
                         print("Успешная авторизация!")
-                        break
+                        return nick_user
                     else:
                         print("Неверный пароль, попробуй ещё раз!")
                 else:
                     print("Неверная почта, попробуй ещё раз!")
 
 
-
 def main():
     active_user = "skr1pmen"
 
     #  ↓ Активный пользователь программы, выбирается в Регистрации/Авторизации
-    # login()  # Функция авторизации пользователей
+    # active_user = login()  # Функция авторизации пользователей
     # active_user = user_registration()  # Функция регистрации пользователя
     # edit_user_info(active_user)  # Функция редактирования данных пользователя
     # add_music(active_user)  # Функция добавление музыки
-    # show_music()  # Функция просмотра всех песен в базе
-    add_music_in_playlist(active_user)  # Функция добавления песен в плейлист
+    show_music()  # Функция просмотра всех песен в базе
+    # add_music_in_playlist(active_user)  # Функция добавления песен в плейлист
 
 
 if __name__ == '__main__':
