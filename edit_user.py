@@ -36,7 +36,7 @@ def profession(active_user):
     user_data[6] = f"{user_list}\n"
 
     set_file(active_user, user_data)
-    return "Проффессии добавлены!"
+    return "Профессии добавлены!"
 
 
 def hobby(active_user):
@@ -51,4 +51,4 @@ def hobby(active_user):
     user_data[7] = f"{user_list}\n"
 
     set_file(active_user, user_data)
-    return "Профессии добавлены!"
+    return "Хобби добавлены!"
