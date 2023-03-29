@@ -39,6 +39,7 @@ def music_edit_part1(number_music):
         with open(f"./musics/{music}", "r", encoding="utf8") as file:  # Открытие файла с названием music на чтение
             music_info = file.readlines()  # Создание массива данных песни
             id = music_info[1][:-1]  # Получение и сохранение id песни
+            name = music_info[2][:-1]
             if id_music == id:
                 tags = re.sub(r'[\n\[\]\']', '', music_info[3]).split(',')  # Получение и сохранение тегов песни
                 result = ''
@@ -49,7 +50,7 @@ def music_edit_part1(number_music):
                         result = f'{result}, {tag}'
             else:
                 return False
-    return result
+    return name, result
 
 
 def music_edit_part2(number_music, tags):
