@@ -1,5 +1,10 @@
 import os
 import re
+import time
+
+import edit_user
+import edit_user as edit_u
+import main
 
 
 def search_music(search_music):
@@ -58,3 +63,42 @@ def music_edit_part2(number_music, tags):
             if id_music == id:
                 music_info[1][:-1] = f"{tags_array}\n"
                 return True
+
+
+def delete_music_in_playlist(active_user, song_number):
+    id = str(int(song_number) - 1)
+    user_data = edit_u.get_file(active_user)  # Получение всех данных пользователя
+    playlist_id = re.sub(r'[\[\]\' ]', '', user_data[14][:-1]).split(',')
+    playlist_num = int(user_data[16][:-1])
+    playlist_len = main.time_converter(user_data[17])
+    all_music = os.listdir("./musics/")  # Создание списка всех файлов музыки
+    for music in all_music:  # Цикл перебора списка all_music
+        with open(f"./musics/{music}", "r", encoding="utf8") as file:  # Открытие файла с названием music на чтение
+            music_info = file.readlines()  # Создание массива данных песни
+            music_id = music_info[1][:-1]
+            if id == music_id:
+                music_last_info = re.sub(r'[\[\]\']', '', music_info[4]).split(',')  # Получение и сохранение информации о песне
+                music_len = main.time_converter(music_last_info[-2])  # Конвертация времени из файла из Ч:М:С в секунды
+                # Этап удаления музыки
+                try:
+                    playlist_id.remove(str(id))
+                    playlist_len -= music_len
+                    format_time = time.strftime("%H:%M:%S", time.gmtime(playlist_len))
+                    playlist_num -= 1
+                    playlist_tags = []
+                    for music in all_music:
+                        with open(f"./musics/{music}", "r", encoding="utf8") as file:  # Открытие файла с названием music на чтение
+                            music_info = file.readlines()  # Создание массива данных песни
+                            if music_info[1][:-1] in playlist_id:
+                                music_tag = re.sub(r'[\n\[\]\']', '', music_info[3]).split(', ')
+                                playlist_tags = list(filter(None, set(playlist_tags + music_tag)))
+                                user_data[14] = f"{playlist_id}\n"
+                                user_data[16] = f"{playlist_num}\n"
+                                user_data[17] = f"{format_time}"
+                                user_data[13] = f"{playlist_tags}\n"
+                except:
+                    print("Песни нет в плейлисте!")
+            else:
+                continue
+
+    edit_user.set_file(active_user, user_data)
