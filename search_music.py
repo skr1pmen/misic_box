@@ -149,11 +149,49 @@ def show_report_music():
     return count, id_list
 
 
-def home_page(sort):
+def home_page_tags():
     all_music = os.listdir("./musics/")  # Создание списка всех файлов музыки
-    track = choice(all_music)
-    with open(f"./musics/{track}", "r", encoding="utf8") as file:  # Открытие файла с названием track на чтение
-        music_info = file.readlines()  # Создание массива данных песни
+    tags_list = []
+    for music in all_music:
+        with open(f"./musics/{music}", "r", encoding="utf8") as file:  # Открытие файла с названием track на чтение
+            music_info = file.readlines()  # Создание массива данных песни
+            tags = re.sub(r'[\n\[\]\']', '', music_info[3]).split(', ')
+            tags_list.extend(tags)
+            tags_list = list(filter(None, set(tags_list)))
+    random_tag = choice(tags_list)
+    all_time = 0
+    for music in all_music:
+        with open(f"./musics/{music}", "r", encoding="utf8") as file:  # Открытие файла с названием track на чтение
+            music_info = file.readlines()  # Создание массива данных песни
+            tags = re.sub(r'[\n\[\]\']', '', music_info[3]).split(', ')
+            if random_tag in tags:
+                info = re.sub(r'[\n\[\]\']', '', music_info[4]).split(', ')
+                time = main.time_converter(info[-3])
+                all_time += time
+    return random_tag, all_time
 
+
+def home_page_authors():
+    all_music = os.listdir("./musics/")  # Создание списка всех файлов музыки
+    author_list = []
+    for music in all_music:
+        with open(f"./musics/{music}", "r", encoding="utf8") as file:  # Открытие файла с названием track на чтение
+            music_info = file.readlines()  # Создание массива данных песни
+            info = re.sub(r'[\n\[\]\']', '', music_info[4]).split(', ')
+            author = info[0:-3]
+            author_list.extend(author)
+            author_list = list(filter(None, set(author_list)))
+    random_author = choice(author_list)
+    all_time = 0
+    for music in all_music:
+        with open(f"./musics/{music}", "r", encoding="utf8") as file:  # Открытие файла с названием track на чтение
+            music_info = file.readlines()  # Создание массива данных песни
+            info = re.sub(r'[\n\[\]\']', '', music_info[4]).split(', ')
+            author = info[0:-3]
+            if random_author in author:
+                info = re.sub(r'[\n\[\]\']', '', music_info[4]).split(', ')
+                time = main.time_converter(info[-3])
+                all_time += time
+    return random_author, all_time
 
 
