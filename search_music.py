@@ -63,6 +63,11 @@ def music_edit_part2(number_music, tags):
             id = music_info[1][:-1]  # Получение и сохранение id песни
             if id_music == id:
                 music_info[1][:-1] = f"{tags_array}\n"
+                with open(f"./music/{music}", "w", encoding='utf8') as file_writer:
+                    i = 0  # Счётчик для цикла
+                    while i < len(music_info):  # Цикл перебора всех данных пользователя
+                        file_writer.write(music_info[i])  # Построчная запись данных в файл
+                        i += 1  # Увеличиваем счётчик
                 return True
 
 
@@ -103,3 +108,43 @@ def delete_music_in_playlist(active_user, song_number):
                 continue
 
     edit_user.set_file(active_user, user_data)
+
+
+def report_music(song_number):
+    id_music = int(song_number) - 1
+    all_music = os.listdir("./musics/")  # Создание списка всех файлов музыки
+    for music in all_music:  # Цикл перебора списка all_music
+        with open(f"./musics/{music}", "r", encoding="utf8") as file:  # Открытие файла с названием music на чтение
+            music_info = file.readlines()  # Создание массива данных песни
+            id = music_info[1][:-1]  # Получение и сохранение id песни
+            if id_music == int(id):
+                info = re.sub(r'[\n\[\]\']', '', music_info[4]).split(', ')
+                is_report = info[-1]
+                if is_report == "1":
+                    info[-1] = "0"
+                    music_info[4] = info
+                    with open(f"./musics/{music}", "w", encoding="utf8") as file_music:
+                        i = 0  # Счётчик для цикла
+                        while i < len(music_info):  # Цикл перебора всех данных пользователя
+                            file_music.write(str(music_info[i]))  # Построчная запись данных в файл
+                            i += 1  # Увеличиваем счётчик
+                    return True
+
+
+def show_report_music():
+    all_music = os.listdir("./musics/")  # Создание списка всех файлов музыки
+    count = 0
+    id_list = []
+    for music in all_music:  # Цикл перебора списка all_music
+        with open(f"./musics/{music}", "r", encoding="utf8") as file:  # Открытие файла с названием music на чтение
+            music_info = file.readlines()  # Создание массива данных песни
+            info = re.sub(r'[\n\[\]\']', '', music_info[4]).split(', ')
+            id = music_info[1][:-1]
+            is_report = info[-1]
+            if is_report == '0':
+                count += 1
+                id_list.append(id)
+            else:
+                continue
+    return count, id_list
+
