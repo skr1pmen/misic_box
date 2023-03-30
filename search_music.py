@@ -1,7 +1,7 @@
 import os
 import re
 import time
-
+from random import choice
 import edit_user
 import edit_user as edit_u
 import main
@@ -147,4 +147,13 @@ def show_report_music():
             else:
                 continue
     return count, id_list
+
+
+def home_page(sort):
+    all_music = os.listdir("./musics/")  # Создание списка всех файлов музыки
+    track = choice(all_music)
+    with open(f"./musics/{track}", "r", encoding="utf8") as file:  # Открытие файла с названием track на чтение
+        music_info = file.readlines()  # Создание массива данных песни
+
+
 
